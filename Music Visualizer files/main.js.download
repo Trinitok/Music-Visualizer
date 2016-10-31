@@ -238,16 +238,29 @@ function initAudio(data) {
 
 //  if the space bar is pressed
 var space = false;
+var startOffset = 0;
+var startTime = 0;
 $(function() {
   $(document).keydown(function(evt) {
   	if (evt.keyCode == 32 && space) {  // pressing space to resume
 	    space = false;
+	    // startTime = audioContext.currentTime;
+	    // source = audioContext.createBufferSource();
+	    // // source.buffer = audioContext.createBuffer(data, false );
+	    // source.connect(audioContext.destination);
+	    // source.start(0, startOffset % source.buffer);
+
+	    //  try creating resume audio which is the same as create, but start is modded?
 	    createAudio();
     }
     if (evt.keyCode == 32 && !space) {  // pressing space to pause
       space = true;
       source.disconnect(); // should stop the music at the current time
-      console.log('space');
+      // source.stop();
+  	  // Measure how much time passed since the last pause.
+  	  startOffset += audioContext.currentTime - startTime;
+
+      console.log('curr time stopped  at: ' + audioContext.currentTime);
     }
     if (evt.keyCode == 39){
     	nextSong();
@@ -258,7 +271,7 @@ $(function() {
 
 function nextSong(){
 	current ++;
-		if(source) source.disconnect();  // get rid of old nodes
+		source.disconnect();  // get rid of old nodes
 		LoopVisualizer.remove();
 		//  if we are at the end of the list
 		if(current >= droppedFiles.length){   //  greater than or equal to because of people who think it is funny to spam the right arrow button
